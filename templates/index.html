@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1>Bluepart</h1>
+<h2>Pixel art blueprints for Factorio</h2>
+<p>Welcome!</p>
+
+<form id="form" action="{{ url_for('generate_blueprint') }}" method="post" enctype="multipart/form-data">
+<table>
+<tr>
+<td><label for="source">Source Image: </label></td><td><input type="file" id="source" name="source" required></td>
+</tr><tr>
+<td><label for="scale">Scale Factor: </label></td><td><input type="number" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.20"></td>
+</tr>
+</table>
+<input checked type="checkbox" id="landfill" value="landfill" name="tiles"><label for="landfill">Landfill</label><br>
+<input checked type="checkbox" id="stone-path" value="stone-path" name="tiles"><label for="stone-path">Stone Path</label><br>
+<input checked type="checkbox" id="concrete" value="concrete" name="tiles"><label for="concrete">Concrete</label><br>
+<input checked type="checkbox" id="hazard-concrete-right" value="hazard-concrete-right" name="tiles"><label for="hazard-concrete-right">Hazard Concrete Right</label><br>
+<input checked type="checkbox" id="hazard-concrete-left" value="hazard-concrete-left" name="tiles"><label for="hazard-concrete-left">Hazard Concrete Left</label><br>
+<input checked type="checkbox" id="refined-concrete" value="refined-concrete" name="tiles"><label for="refined-concrete">Refined Concrete</label><br>
+<input checked type="checkbox" id="refined-hazard-concrete-right" value="refined-hazard-concrete-right" name="tiles"><label for="refined-hazard-concrete-right">Refined Hazard Concrete Right</label><br>
+<input checked type="checkbox" id="refined-hazard-concrete-left" value="refined-hazard-concrete-left" name="tiles"><label for="refined-hazard-concrete-left">Refined Hazard Concrete Left</label><br>
+
+<button type="submit" id="generate" name="generate">Generate Blueprint!</button>
+</form>
+<input type="text" id="bp-string" readonly><button onclick="copyString()">Copy</button>
+<script>
+	var form = document.getElementById("form")
+	form.addEventListener('submit', function(event) {
+	    event.preventDefault();    // prevent page from refreshing
+	    const formData = new FormData(form);  // grab the data inside the form fields
+	    fetch('/', {   // assuming the backend is hosted on the same server
+	        method: 'POST',
+	        body: formData,
+	    }).then(response => response.text()).then((message) => {
+	        // do something with the response if needed.
+	    	outspan = document.getElementById("bp-string");
+	    	outspan.value = message;
+	        // If you want the table to be built only after the backend handles the request and replies, call buildTable() here.
+	    });
+	});
+
+	function copyString()
+	{
+		var string_textbox = document.getElementById("bp-string");
+
+		string_textbox.select();
+		string_textbox.setSelectionRange(0, 99999);
+
+		navigator.clipboard.writeText(string_textbox.value);
+
+		alert("Copied string to clipboard!");
+	}
+</script>
+</body>
+</html>
