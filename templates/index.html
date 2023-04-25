@@ -2,10 +2,15 @@
 <html>
 <head>
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script
+			  src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+			  integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
+			  crossorigin="anonymous"></script>
 </head>
 <body>
-<h1>Pixeltorio</h1>
-<h2>Image-to-sprite blueprints for Factorio</h2>
+<h1>Pictorio</h1>
+<h2>Image-to-pixel art blueprints for Factorio</h2>
 <p>Welcome!</p>
 
 <form id="form" action="{{ url_for('generate_blueprint') }}" method="post" enctype="multipart/form-data">
@@ -19,71 +24,32 @@
 
 <table>
 <tr><td>
-<div class="container" id="container">
-	<input draggable="true" class="box" name="boxes" id="landfill" value="landfill"> 
-	<input draggable="true" class="box" name="boxes" id="stone-path" value="stone-path">
-	<input draggable="true" class="box" name="boxes" id="concrete" value="concrete">
-	<input draggable="true" class="box" name="boxes" id="hazard-concrete-right" value="hazard-concrete-right">
-	<input draggable="true" class="box" name="boxes" id="hazard-concrete-left" value="hazard-concrete-left">
-	<input draggable="true" class="box" name="boxes" id="refined-concrete" value="refined-concrete">
-	<input draggable="true" class="box" name="boxes" id="refined-hazard-concrete-right" value="refined-hazard-concrete-right">
-	<input draggable="true" class="box" name="boxes" id="refined-hazard-concrete-left" value="refined-hazard-concrete-left">
+<div class="demo">
+<ul id="sortable">
+    <li class=""><input type="checkbox" name="tiles" value="landfill" checked/><span class="chkbox">Landfill</span></li>
+    <li class=""><input type="checkbox" name="tiles" value="stone-path" checked/><span class="chkbox">Stone Path</span></li>
+    <li class=""><input type="checkbox" name="tiles" value="concrete" checked/><span class="chkbox">Concrete</span></li>
+    <li class=""><input type="checkbox" name="tiles" value="hazard-concrete-left" checked/><span class="chkbox">Hazard Concrete Left</span></li>
+    <li class=""><input type="checkbox" name="tiles" value="hazard-concrete-right" checked/><span class="chkbox">Hazard Concrete Right</span></li>
+    <li class=""><input type="checkbox" name="tiles" value="refined-concrete" checked/><span class="chkbox">Refined Concrete</span></li>
+    <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-left" checked/><span class="chkbox">Refined Hazard Concrete Left</span></li>
+    <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-right" checked/><span class="chkbox">Refined Hazard Concrete Right</span></li>
+</ul>
 </div>
-</td>
-<td>
-<input checked type="checkbox" id="chk-landfill" value="landfill" name="tiles" class="tile"><label for="landfill">Landfill</label><br>
-<input checked type="checkbox" id="chk-stone-path" value="stone-path" name="tiles" class="tile"><label for="stone-path">Stone Path</label><br>
-<input checked type="checkbox" id="chk-concrete" value="concrete" name="tiles" class="tile"><label for="concrete">Concrete</label><br>
-<input checked type="checkbox" id="chk-hazard-concrete-right" value="hazard-concrete-right" name="tiles" class="tile"><label for="hazard-concrete-right">Hazard Concrete Right</label><br>
-<input checked type="checkbox" id="chk-hazard-concrete-left" value="hazard-concrete-left" name="tiles" class="tile"><label for="hazard-concrete-left">Hazard Concrete Left</label><br>
-<input checked type="checkbox" id="chk-refined-concrete" value="refined-concrete" name="tiles" class="tile"><label for="refined-concrete">Refined Concrete</label><br>
-<input checked type="checkbox" id="chk-refined-hazard-concrete-right" value="refined-hazard-concrete-right" name="tiles" class="tile"><label for="refined-hazard-concrete-right">Refined Hazard Concrete Right</label><br>
-<input checked type="checkbox" id="chk-refined-hazard-concrete-left" value="refined-hazard-concrete-left" name="tiles" class="tile"><label for="refined-hazard-concrete-left">Refined Hazard Concrete Left</label><br>
-</td></tr>
+</td><td class="gradient"></td></tr>
 </table>
 
 <button type="submit" id="generate" name="generate">Generate Blueprint!</button>
 </form>
 <input type="text" id="bp-string" readonly><button onclick="copyString()">Copy</button>
 <script>
-	function isHidden(el)
-	{
-		var style = window.getComputedStyle(el)
-		return ((style.display === 'none') || (style.visibility === 'hidden'))
-	}
-
-	function getVisibleBoxes()
-	{
-		var all = document.getElementById("container").getElementsByClassName("box")
-		var visible = []
-
-		for (var i=0, max=all.length; i < max; i++)
-		{
-			if (isHidden(all[i]))
-			{
-				// hidden
-			}
-			else
-			{
-				// visible
-				visible.push(all[i])
-			}
-		}
-
-		return visible
-	}
-
 	var form = document.getElementById("form")
 	form.addEventListener('submit', function(event) {
 		// prevent page from refreshing
 	    event.preventDefault();
 
-	    // gather the selected tiles in the selected order
-	    visible = getVisibleBoxes()
-
 		// grab the data inside the form fields
 	    const formData = new FormData(form);  
-	    console.log(formData)
 	    fetch('/', {
 	        method: 'POST',
 	        body: formData,
@@ -103,7 +69,7 @@
 
 		navigator.clipboard.writeText(string_textbox.value);
 
-		alert("Copied string to clipboard!");
+		// alert("Copied string to clipboard!");
 	}
 
 	var uploadField = document.getElementById("source");
@@ -117,89 +83,8 @@
 		};
 	};
 
-	document.addEventListener('DOMContentLoaded', (event) => {
-
-		function handleDragStart(e) {
-		  this.style.opacity = '0.4';
-
-		  dragSrcEl = this;
-
-		  e.dataTransfer.effectAllowed = 'move';
-		  data = {"text": this.innerHTML, "id": this.id}
-		  data = JSON.stringify(data)
-		  e.dataTransfer.setData('text/html', data);
-	      console.log("drag!")
-		}
-
-	  function handleDragEnd(e) {
-	    this.style.opacity = '1';
-
-	    items.forEach(function (item) {
-	      item.classList.remove('over');
-	    });
-	  }
-
-	  function handleDragOver(e) {
-	    e.preventDefault();
-	    return false;
-	  }
-
-	  function handleDragEnter(e) {
-	    this.classList.add('over');
-	  }
-
-	  function handleDragLeave(e) {
-	    this.classList.remove('over');
-	  }
-
-	  function handleDrop(e) {
-	    e.stopPropagation();
-
-	    if (dragSrcEl !== this) {
-	      dragSrcEl.innerHTML = this.innerHTML;
-	      dragSrcEl.id = this.id
-	      const data = JSON.parse(e.dataTransfer.getData('text/html'))
-	      this.innerHTML = data["text"]
-	      this.id = data["id"]
-	      console.log("drop!")
-	    }
-
-	    return false;
-	  }
-
-	  let items = document.querySelectorAll('.container .box');
-	  items.forEach(function(item) {
-	    item.addEventListener('dragstart', handleDragStart);
-	    item.addEventListener('dragover', handleDragOver);
-	    item.addEventListener('dragenter', handleDragEnter);
-	    item.addEventListener('dragleave', handleDragLeave);
-	    item.addEventListener('dragend', handleDragEnd);
-	    item.addEventListener('drop', handleDrop);
-	  });
-	});
-
-	let container = document.getElementById('container')
-	let tiles = document.querySelectorAll('.tile');
-	tiles.forEach(function(tile) {
-		tile.addEventListener('change', (event) => {
-			var tid = event.currentTarget.id
-			tid = tid.slice(4)
-			console.log(tid)
-			let touched = document.getElementById(tid)
-
-			if (event.currentTarget.checked) {
-				// alert('checked ' + touched.id);
-				touched.style.display = "block"
-				touched.disabled = false
-			}
-			else {
-				// alert('unchecked ' + touched.id);
-				touched.style.display = "none"
-				touched.disabled = true
-			}
-		})
-	})
-
+	$( "#sortable" ).sortable({ cursor: "move" });
+	$( "#sortable" ).disableSelection();
 
 </script>
 </body>

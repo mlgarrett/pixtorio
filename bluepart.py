@@ -30,6 +30,9 @@ def construct_blueprint(resized_image, palette):
 	criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
 	ret, label, center = cv2.kmeans(Z, K, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
 
+	# this would sort the centers by their means
+	# center[numpy.mean(center, axis=1).argsort()]
+
 	# center now contains K RGB color values as a nested list
 
 	# reshape the labels from kmeans back to the shape of the resized_image image
