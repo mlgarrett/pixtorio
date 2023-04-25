@@ -22,20 +22,19 @@ def allowed_file(filename):
 def generate_blueprint():
 	if request.method == 'POST':
 		source_file = request.files['source']
-		print(source_file)
+		# print(source_file)
 
 		if source_file and allowed_file(source_file.filename):
 			filename = secure_filename(source_file.filename)
 			filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 			source_file.save(filepath)
-
-		print(filepath)
+			# print(filepath)
 
 		scaling_factor = float(request.form.get("scale"))
-		print(scaling_factor)
+		# print(scaling_factor)
 
 		tiles = request.form.getlist('tiles')
-		print(tiles)
+		# print(tiles)
 
 		# read the image
 		og_image = cv2.imread(filepath)

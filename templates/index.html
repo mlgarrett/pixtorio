@@ -30,16 +30,17 @@
 <script>
 	var form = document.getElementById("form")
 	form.addEventListener('submit', function(event) {
-	    event.preventDefault();    // prevent page from refreshing
-	    const formData = new FormData(form);  // grab the data inside the form fields
-	    fetch('/', {   // assuming the backend is hosted on the same server
+		// prevent page from refreshing
+	    event.preventDefault();    
+		// grab the data inside the form fields
+	    const formData = new FormData(form);  
+	    fetch('/', {
 	        method: 'POST',
 	        body: formData,
 	    }).then(response => response.text()).then((message) => {
-	        // do something with the response if needed.
+	        // do something with the response
 	    	outspan = document.getElementById("bp-string");
 	    	outspan.value = message;
-	        // If you want the table to be built only after the backend handles the request and replies, call buildTable() here.
 	    });
 	});
 
@@ -54,6 +55,17 @@
 
 		alert("Copied string to clipboard!");
 	}
+
+	var uploadField = document.getElementById("source");
+	uploadField.onchange = function()
+	{
+		// 2.5 megabytes limit
+		if(this.files[0].size > 2621440)
+		{
+			alert("File is too large!\nPlease use a file that is < 2.5Mb.");
+			this.value = "";
+		};
+	};
 </script>
 </body>
 </html>
