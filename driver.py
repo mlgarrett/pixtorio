@@ -33,8 +33,8 @@ def generate_blueprint():
 		scaling_factor = float(request.form.get("scale"))
 		# print(scaling_factor)
 
-		tiles = request.form.getlist('tiles')
-		# print(tiles)
+		tiles = request.form.getlist('boxes')
+		print(tiles)
 
 		# read the image
 		og_image = cv2.imread(filepath)
