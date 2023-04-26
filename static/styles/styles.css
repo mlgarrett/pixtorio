@@ -1,3 +1,49 @@
+/*
+factorio primary colors (approximate)
+*/
+:root
+{
+  --lightgray: #8e8e8e;
+  --darkgray: #313031;
+  --fontlight: #ffffff;
+  --fontdark: #000000;
+  --fontyellow: #ffe6c0;
+  --hovergreen: #7aed81;
+  --staticgreen: #5eb663;
+}
+
+body.base
+{
+/*  background-color: --darkgray;*/
+  background-color: var(--darkgray);
+}
+
+table#main-grid
+{
+  background-color: var(--fontlight);
+}
+
+h1
+{
+  color: var(--fontyellow);
+}
+
+h2
+{
+  color: var(--fontlight);
+}
+
+p
+{
+  color: var(--fontlight);
+}
+
+form
+{
+  background-color: var(--darkgray);
+  color: var(--fontdark);
+}
+
 table#params
 {
   border-collapse: separate;
@@ -7,7 +53,6 @@ table#params
 ul#sortable
 {
 /*  width: max-content;*/
-  width: 400px;
   list-style-type: "\2195";
   cursor: pointer !important;
 }
@@ -17,6 +62,24 @@ li
   border: 2px dotted #666;
   margin: 2px 0;
   padding: 0.25em;
+  background-color: var(--lightgray);
+  color: var(--fontdark);
+}
+
+li::marker
+{
+  color: var(--staticgreen);
+}
+
+td
+{
+  border: 1px solid black;
+}
+
+td.par-table-right
+{
+  text-align: right;
+  margin: auto;
 }
 
 .chkbox

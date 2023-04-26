@@ -8,69 +8,75 @@
 			  integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
 			  crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="base">
 <h1>Piχtorio</h1>
 <h2>Image-to-pixel art blueprints for Factorio</h2>
 <p>Welcome!</p>
 
 <form id="form" action="{{ url_for('generate_blueprint') }}" method="post" enctype="multipart/form-data">
-<table id="params">
-<tr>
-<td><label for="source">Source Image: </label></td><td><input type="file" id="source" name="source" required></td>
-</tr><tr>
-<td><label for="scale">Scale Factor: </label></td><td><input type="number" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.15"></td>
-</tr>
-</table>
-
-<table>
+<table id="main-grid">
 <tr><td>
-<div class="container">
-<ul id="sortable">
-    <li class=""><input type="checkbox" name="tiles" value="landfill" checked/><span class="chkbox">Landfill</span></li>
-    <li class=""><input type="checkbox" name="tiles" value="stone-path" checked/><span class="chkbox">Stone Path</span></li>
-    <li class=""><input type="checkbox" name="tiles" value="concrete" checked/><span class="chkbox">Concrete</span></li>
-    <li class=""><input type="checkbox" name="tiles" value="hazard-concrete-left" checked/><span class="chkbox">Hazard Concrete Left</span></li>
-    <li class=""><input type="checkbox" name="tiles" value="hazard-concrete-right" checked/><span class="chkbox">Hazard Concrete Right</span></li>
-    <li class=""><input type="checkbox" name="tiles" value="refined-concrete" checked/><span class="chkbox">Refined Concrete</span></li>
-    <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-left" checked/><span class="chkbox">Refined Hazard Concrete Left</span></li>
-    <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-right" checked/><span class="chkbox">Refined Hazard Concrete Right</span></li>
-</ul>
-</div>
+	<label for="source">Source Image: </label>
+</td><td>
+	<input type="file" id="source" name="source" required>
+</td></tr>
+<tr><td>
+	<label for="scale">Scale Factor: </label>
+</td><td>
+	<input type="number" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.15">
+</td></tr>
+<tr><td colspan="2">
+	<ul id="sortable">
+	    <li class=""><input type="checkbox" name="tiles" value="landfill" checked/><span class="chkbox">Landfill</span></li>
+	    <li class=""><input type="checkbox" name="tiles" value="stone-path" checked/><span class="chkbox">Stone Path</span></li>
+	    <li class=""><input type="checkbox" name="tiles" value="concrete" checked/><span class="chkbox">Concrete</span></li>
+	    <li class=""><input type="checkbox" name="tiles" value="hazard-concrete-left" checked/><span class="chkbox">Hazard Concrete Left</span></li>
+	    <li class=""><input type="checkbox" name="tiles" value="hazard-concrete-right" checked/><span class="chkbox">Hazard Concrete Right</span></li>
+	    <li class=""><input type="checkbox" name="tiles" value="refined-concrete" checked/><span class="chkbox">Refined Concrete</span></li>
+	    <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-left" checked/><span class="chkbox">Refined Hazard Concrete Left</span></li>
+	    <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-right" checked/><span class="chkbox">Refined Hazard Concrete Right</span></li>
+	</ul>
+	</div>
+</td></tr>
+<tr><td>
+	<table class="params">
+	<tr><td>
+	<button type="submit" id="generate" name="generate">Generate Blueprint!</button>
+	</td></tr>
+	<tr><td>
+	<input type="text" id="bp-string" disabled><button onclick="copyString()">Copy</button>
+	</td></tr>
+	</table>
 </td></tr>
 </table>
-
-<table class="params">
-<tr><td>
-<button type="submit" id="generate" name="generate">Generate Blueprint!</button>
 </form>
-</td></tr>
-<tr><td>
-<input type="text" id="bp-string" disabled><button onclick="copyString()">Copy</button>
-</td></tr>
-</table>
+
 <script>
+
 	var form = document.getElementById("form")
 	form.addEventListener('submit', function(event) {
 		// prevent page from refreshing
-	    event.preventDefault();
+	    event.preventDefault()
 
 		// grab the data inside the form fields
-	    const formData = new FormData(form);  
-	    fetch('/', {
+	    const formData = new FormData(form)
+	    fetch('/',
+	    {
 	        method: 'POST',
 	        body: formData,
-	    }).then(response => response.text()).then((message) => {
+	    }).then(response => response.text()).then((message) =>
+	    {
 	        // do something with the response
-	    	outspan = document.getElementById("bp-string");
-	    	outspan.value = message;
-	    });
-	});
+	    	outspan = document.getElementById("bp-string")
+	    	outspan.value = message
+	    })
+	})
 
 	function copyString()
 	{
-		var string_textbox = document.getElementById("bp-string");
+		var string_textbox = document.getElementById("bp-string")
 
-		navigator.clipboard.writeText(string_textbox.value);
+		navigator.clipboard.writeText(string_textbox.value)
 
 		// alert("Copied string to clipboard!");
 	}
@@ -83,12 +89,13 @@
 		{
 			alert("File is too large!\nPlease use a file that is < 2.5Mb.");
 			this.value = "";
-		};
-	};
+		}
+	}
 
-	$( "#sortable" ).sortable({ cursor: "move", revert: "50" });
-	$( "#sortable" ).disableSelection();
+	$( "#sortable" ).sortable({ cursor: "move", revert: "50" })
+	$( "#sortable" ).disableSelection()
 
 </script>
+
 </body>
 </html>
