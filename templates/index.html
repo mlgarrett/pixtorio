@@ -9,22 +9,22 @@
 			  crossorigin="anonymous"></script>
 </head>
 <body>
-<h1>Pictorio</h1>
+<h1>Piχtorio</h1>
 <h2>Image-to-pixel art blueprints for Factorio</h2>
 <p>Welcome!</p>
 
 <form id="form" action="{{ url_for('generate_blueprint') }}" method="post" enctype="multipart/form-data">
-<table>
+<table id="params">
 <tr>
 <td><label for="source">Source Image: </label></td><td><input type="file" id="source" name="source" required></td>
 </tr><tr>
-<td><label for="scale">Scale Factor: </label></td><td><input type="number" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.20"></td>
+<td><label for="scale">Scale Factor: </label></td><td><input type="number" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.15"></td>
 </tr>
 </table>
 
 <table>
 <tr><td>
-<div class="demo">
+<div class="container">
 <ul id="sortable">
     <li class=""><input type="checkbox" name="tiles" value="landfill" checked/><span class="chkbox">Landfill</span></li>
     <li class=""><input type="checkbox" name="tiles" value="stone-path" checked/><span class="chkbox">Stone Path</span></li>
@@ -36,12 +36,18 @@
     <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-right" checked/><span class="chkbox">Refined Hazard Concrete Right</span></li>
 </ul>
 </div>
-</td><td class="gradient"></td></tr>
+</td></tr>
 </table>
 
+<table class="params">
+<tr><td>
 <button type="submit" id="generate" name="generate">Generate Blueprint!</button>
 </form>
-<input type="text" id="bp-string" readonly><button onclick="copyString()">Copy</button>
+</td></tr>
+<tr><td>
+<input type="text" id="bp-string" disabled><button onclick="copyString()">Copy</button>
+</td></tr>
+</table>
 <script>
 	var form = document.getElementById("form")
 	form.addEventListener('submit', function(event) {
@@ -64,9 +70,6 @@
 	{
 		var string_textbox = document.getElementById("bp-string");
 
-		string_textbox.select();
-		string_textbox.setSelectionRange(0, 99999);
-
 		navigator.clipboard.writeText(string_textbox.value);
 
 		// alert("Copied string to clipboard!");
@@ -83,7 +86,7 @@
 		};
 	};
 
-	$( "#sortable" ).sortable({ cursor: "move" });
+	$( "#sortable" ).sortable({ cursor: "move", revert: "50" });
 	$( "#sortable" ).disableSelection();
 
 </script>

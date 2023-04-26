@@ -1,0 +1,25 @@
+table#params
+{
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+
+ul#sortable
+{
+/*  width: max-content;*/
+  width: 400px;
+  list-style-type: "\2195";
+  cursor: pointer !important;
+}
+
+li
+{
+  border: 2px dotted #666;
+  margin: 2px 0;
+  padding: 0.25em;
+}
+
+.chkbox
+{
+  cursor: pointer !important;
+}
