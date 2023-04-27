@@ -10,27 +10,92 @@ factorio primary colors (approximate)
   --fontyellow: #ffe6c0;
   --hovergreen: #7aed81;
   --staticgreen: #5eb663;
+  --hoverorange: #e39827;
+}
+
+#wrapper
+{
+  display: flex;
+  justify-content: center;
+}
+
+td
+{
+  padding: 5px;
 }
 
 body.base
 {
-/*  background-color: --darkgray;*/
+  font-family: sans-serif;
   background-color: var(--darkgray);
+  color: var(--fontlight);
 }
 
-table#main-grid
+table#main
 {
-  background-color: var(--fontlight);
+/*  border: 1px dotted black;*/
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  width: 50em;
+}
+
+table#container
+{
+  border: 1px solid black;
+  width: 100%;
+  background-color: var(--lightgray);
+  color: var(--fontdark);
+  padding: 5px;
+  height: 20em;
+}
+
+td.tiles
+{
+  padding: 0 5em;
+}
+
+tr.io-rows
+{
+/*  background-color: var(--lightgray);*/
+  color: var(--fontlight);
+}
+
+td.io-labs
+{
+  font-weight: bold;
+  text-align: right;
+}
+
+td.io-inputs
+{
+  background-color: var(--lightgray);
+  color: var(--fontdark);
+}
+
+td.tile-row
+{
+  border: 1px solid black;
+  background-color: var(--staticgreen);
+  cursor: pointer;
+/*  padding: 5px;*/
+  width: 30em;
+}
+
+td.tile-row:hover
+{
+  background-color: var(--hovergreen);
 }
 
 h1
 {
   color: var(--fontyellow);
+  text-align: center;
 }
 
-h2
+h3
 {
   color: var(--fontlight);
+  text-align: center;
 }
 
 p
@@ -41,48 +106,91 @@ p
 form
 {
   background-color: var(--darkgray);
-  color: var(--fontdark);
 }
 
-table#params
+/* Tooltip container */
+.tooltip
 {
-  border-collapse: separate;
-  border-spacing: 0 15px;
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
-ul#sortable
+.tooltip:hover
 {
-/*  width: max-content;*/
-  list-style-type: "\2195";
-  cursor: pointer !important;
+  cursor: default;
 }
 
-li
+/* Tooltip text */
+.tooltip .tooltip-text
 {
-  border: 2px dotted #666;
-  margin: 2px 0;
-  padding: 0.25em;
+  visibility: hidden;
+  width: max-content;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+
+  top: -2px;
+  left: 150%;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltip-text
+{
+  visibility: visible;
+}
+
+tr.output-rows
+{
+/*  background-color: var(--lightgray);*/
+  text-align: center;
+}
+
+tr.generate-row
+{
+  text-align: center;
+}
+
+input#bp-string
+{
+  width: 25em;
+  text-align: center;
+  background-color: var(--fontlight);
+}
+
+.placeholder
+{
+  width: 50em;
+  background-color: lightyellow;
+}
+
+.helper
+{
+  width: 50em;
+}
+
+input::file-selector-button
+{
   background-color: var(--lightgray);
-  color: var(--fontdark);
 }
 
-li::marker
+input::file-selector-button:hover
 {
-  color: var(--staticgreen);
+  background-color: var(--hoverorange);
 }
 
-td
+button
 {
-  border: 1px solid black;
+  background-color: var(--lightgray);
 }
 
-td.par-table-right
+button:hover
 {
-  text-align: right;
-  margin: auto;
-}
-
-.chkbox
-{
-  cursor: pointer !important;
+  background-color: var(--hoverorange);
 }

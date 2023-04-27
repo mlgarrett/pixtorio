@@ -9,54 +9,90 @@
 			  crossorigin="anonymous"></script>
 </head>
 <body class="base">
-<h1>Piχtorio</h1>
-<h2>Image-to-pixel art blueprints for Factorio</h2>
-<p>Welcome!</p>
-
+<div id="wrapper">
 <form id="form" action="{{ url_for('generate_blueprint') }}" method="post" enctype="multipart/form-data">
-<table id="main-grid">
-<tr><td>
-	<label for="source">Source Image: </label>
+<table id="main">
+<tr><td colspan="3">
+	<h1>Piχtorio</h1>
+	<h3>Image-to-pixel art blueprints for Factorio</h3>
+	<p>Welcome!</p>
+	<p>With κ tiles selected, the image you provide will be reduced to κ colors, and each resulting color will be assigned to one of the selected tiles.</p>
+	<p>Higher κ yields more detail. You can re-order the tiles in the list below to tune the aesthetics of the resulting blueprint.</p>
+</td></tr>
+<tr class="io-rows"><td class="io-labs">
+	Source Image
+</td><td>
+	<span class="tooltip"> ⓘ <span class="tooltip-text">Max 2.5Mb!</span></span>
 </td><td>
 	<input type="file" id="source" name="source" required>
 </td></tr>
-<tr><td>
-	<label for="scale">Scale Factor: </label>
+<tr class="io-rows"><td class="io-labs">
+	Scale Factor
 </td><td>
-	<input type="number" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.15">
+	<span class="tooltip"> ⓘ <span class="tooltip-text">Bigger = Higher Resolution = Larger Blueprint</span></span>
+</td><td>
+	<input type="number" size="5" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.15">
 </td></tr>
-<tr><td colspan="2">
-	<ul id="sortable">
-	    <li class=""><input type="checkbox" name="tiles" value="landfill" checked/><span class="chkbox">Landfill</span></li>
-	    <li class=""><input type="checkbox" name="tiles" value="stone-path" checked/><span class="chkbox">Stone Path</span></li>
-	    <li class=""><input type="checkbox" name="tiles" value="concrete" checked/><span class="chkbox">Concrete</span></li>
-	    <li class=""><input type="checkbox" name="tiles" value="hazard-concrete-left" checked/><span class="chkbox">Hazard Concrete Left</span></li>
-	    <li class=""><input type="checkbox" name="tiles" value="hazard-concrete-right" checked/><span class="chkbox">Hazard Concrete Right</span></li>
-	    <li class=""><input type="checkbox" name="tiles" value="refined-concrete" checked/><span class="chkbox">Refined Concrete</span></li>
-	    <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-left" checked/><span class="chkbox">Refined Hazard Concrete Left</span></li>
-	    <li class=""><input type="checkbox" name="tiles" value="refined-hazard-concrete-right" checked/><span class="chkbox">Refined Hazard Concrete Right</span></li>
-	</ul>
-	</div>
+<tr><td colspan="3" class="tiles">
+	<table id="container">
+		<tbody id="sortable">
+		<tr>
+			<td class="tile-row">
+			᎒᎒᎒ <input type="checkbox" name="tiles" value="landfill" checked/> <span class="chkbox">Landfill</span>
+			</td></tr>
+		<tr>
+			<td class="tile-row">
+		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="stone-path" checked/> <span class="chkbox">Stone Path</span>
+			</td></tr>
+		<tr>
+			<td class="tile-row">
+		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="concrete" checked/> <span class="chkbox">Concrete</span>
+			</td></tr>
+		<tr>
+			<td class="tile-row">
+		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="hazard-concrete-left" checked/> <span class="chkbox">Hazard Concrete L</span>
+			</td></tr>
+		<tr>
+			<td class="tile-row">
+		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="hazard-concrete-right" checked/> <span class="chkbox">Hazard Concrete R</span>
+			</td></tr>
+		<tr>
+			<td class="tile-row">
+		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-concrete" checked/> <span class="chkbox">Refined Concrete</span>
+			</td></tr>
+		<tr>
+			<td class="tile-row">
+		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-hazard-concrete-left" checked/> <span class="chkbox">Refined Hazard Concrete L</span>
+			</td></tr>
+		<tr>
+			<td class="tile-row">
+		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-hazard-concrete-right" checked/> <span class="chkbox">Refined Hazard Concrete R</span>
+			</td></tr>
+		</tbody>
+	</table>
 </td></tr>
-<tr><td>
-	<table class="params">
-	<tr><td>
+<tr class="generate-row"><td colspan="3">
 	<button type="submit" id="generate" name="generate">Generate Blueprint!</button>
 	</td></tr>
-	<tr><td>
-	<input type="text" id="bp-string" disabled><button onclick="copyString()">Copy</button>
-	</td></tr>
-	</table>
+<tr class="output-rows"><td colspan="3">
+	<input type="text" id="bp-string" disabled>
+	<button type="button" onclick="copyString()">Copy</button>
 </td></tr>
 </table>
 </form>
+</div>
 
 <script>
 
 	var form = document.getElementById("form")
+	var submit_button = document.getElementById("generate")
+	var bp_string_field = document.getElementById("bp-string")
 	form.addEventListener('submit', function(event) {
 		// prevent page from refreshing
 	    event.preventDefault()
+
+	    generate.disabled = true
+	    bp_string_field.value = "working..."
 
 		// grab the data inside the form fields
 	    const formData = new FormData(form)
@@ -69,6 +105,7 @@
 	        // do something with the response
 	    	outspan = document.getElementById("bp-string")
 	    	outspan.value = message
+	    	generate.disabled = false
 	    })
 	})
 
@@ -92,7 +129,15 @@
 		}
 	}
 
-	$( "#sortable" ).sortable({ cursor: "move", revert: "50" })
+	$( "#sortable" ).sortable({
+		placeholder: "placeholder",
+		forcePlaceholderSize: true,
+		helper: "helper",
+		forceHelperSize: true,
+		cursor: "move",
+		axis: "y",
+		revert: 250,
+	})
 	$( "#sortable" ).disableSelection()
 
 </script>
