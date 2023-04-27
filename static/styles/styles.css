@@ -195,6 +195,12 @@ button:hover
   background-color: var(--hoverorange);
 }
 
+p.welcome
+{
+  color: var(--fontyellow);
+  font-weight: bold;
+}
+
 tr.footer
 {
   text-align: center;
