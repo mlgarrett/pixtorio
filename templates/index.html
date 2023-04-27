@@ -1,150 +1,168 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Piχtorio</title>
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script
-			  src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-			  integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
-			  crossorigin="anonymous"></script>
-</head>
-<body class="base">
-<div id="wrapper">
-<form id="form" action="{{ url_for('generate_blueprint') }}" method="post" enctype="multipart/form-data">
-<table id="main">
-<tr><td colspan="3">
-	<h1>Piχtorio</h1>
-	<h3>Image-to-pixel art blueprints for Factorio</h3>
-	<p class="welcome">Welcome!</p>
-	<p>With κ tiles selected, the image you provide will be reduced to κ colors, and each color will be assigned to one of the selected tiles.</p>
-	<p>Higher κ yields more detail. You can select and re-order the tiles in the list below to tune the aesthetics of the resulting blueprint. Have fun!</p>
-</td></tr>
-<tr class="io-rows"><td class="io-labs">
-	Source Image
-</td><td>
-	<span class="tooltip"> ⓘ <span class="tooltip-text">Max 2.5Mb!</span></span>
-</td><td>
-	<input type="file" id="source" name="source" required>
-</td></tr>
-<tr class="io-rows"><td class="io-labs">
-	Scale Factor
-</td><td>
-	<span class="tooltip"> ⓘ <span class="tooltip-text">Bigger = Higher Resolution = Larger Blueprint</span></span>
-</td><td>
-	<input type="number" size="5" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.15">
-</td></tr>
-<tr><td colspan="3" class="tiles">
-	<table id="container">
-		<tbody id="sortable">
-		<tr>
-			<td class="tile-row">
-			᎒᎒᎒ <input type="checkbox" name="tiles" value="landfill" checked/> <span class="chkbox">Landfill</span>
-			</td></tr>
-		<tr>
-			<td class="tile-row">
-		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="stone-path" checked/> <span class="chkbox">Stone Path</span>
-			</td></tr>
-		<tr>
-			<td class="tile-row">
-		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="concrete" checked/> <span class="chkbox">Concrete</span>
-			</td></tr>
-		<tr>
-			<td class="tile-row">
-		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="hazard-concrete-left" checked/> <span class="chkbox">Hazard Concrete L</span>
-			</td></tr>
-		<tr>
-			<td class="tile-row">
-		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="hazard-concrete-right" checked/> <span class="chkbox">Hazard Concrete R</span>
-			</td></tr>
-		<tr>
-			<td class="tile-row">
-		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-concrete" checked/> <span class="chkbox">Refined Concrete</span>
-			</td></tr>
-		<tr>
-			<td class="tile-row">
-		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-hazard-concrete-left" checked/> <span class="chkbox">Refined Hazard Concrete L</span>
-			</td></tr>
-		<tr>
-			<td class="tile-row">
-		    ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-hazard-concrete-right" checked/> <span class="chkbox">Refined Hazard Concrete R</span>
-			</td></tr>
-		</tbody>
-	</table>
-</td></tr>
-<tr class="generate-row"><td colspan="3">
-	<button type="submit" id="generate" name="generate">Generate Blueprint!</button>
-	</td></tr>
-<tr class="output-rows"><td colspan="3">
-	<input type="text" id="bp-string" disabled>
-	<button type="button" onclick="copyString()">Copy</button>
-</td></tr>
-<tr class="footer"><td colspan="3">
-	filthywabbit | 2023 | <a href="https://github.com/mlgarrett/pixtorio">github</a>
-</td></tr>
-</table>
-</form>
-</div>
+    <head>
+        <title>Piχtorio</title>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    </head>
+    <body class="base">
+        <div id="wrapper">
+            <form id="form" action="{{ url_for('generate_blueprint') }}" method="post" enctype="multipart/form-data">
+                <table id="main">
+                    <tr>
+                        <td colspan="3">
+                            <h1>Piχtorio</h1>
+                            <h3>Image-to-pixel art blueprints for Factorio</h3>
+                            <p class="welcome">Welcome!</p>
+                            <p>With κ tiles selected, the image you provide will be reduced to κ colors, and each color will be assigned to one of the selected tiles.</p>
+                            <p>Higher κ yields more detail. You can select and re-order the tiles in the list below to tune the aesthetics of the resulting blueprint. Have fun!</p>
+                        </td>
+                    </tr>
+                    <tr class="io-rows">
+                        <td class="io-labs">
+                            Source Image
+                        </td>
+                        <td>
+                            <span class="tooltip"> ⓘ <span class="tooltip-text">Max 2.5Mb!</span></span>
+                        </td>
+                        <td>
+                            <input type="file" id="source" name="source" required>
+                        </td>
+                    </tr>
+                    <tr class="io-rows">
+                        <td class="io-labs">
+                            Scale Factor
+                        </td>
+                        <td>
+                            <span class="tooltip"> ⓘ <span class="tooltip-text">Bigger = Higher Resolution = Larger Blueprint</span></span>
+                        </td>
+                        <td>
+                            <input type="number" size="5" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.15">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="tiles">
+                            <table id="container">
+                                <tbody id="sortable">
+                                    <tr>
+                                        <td class="tile-row">
+                                            ᎒᎒᎒ <input type="checkbox" name="tiles" value="landfill" checked/> <span class="chkbox">Landfill</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tile-row">
+                                            ᎒᎒᎒ <input type="checkbox" name="tiles" value="stone-path" checked/> <span class="chkbox">Stone Path</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tile-row">
+                                            ᎒᎒᎒ <input type="checkbox" name="tiles" value="concrete" checked/> <span class="chkbox">Concrete</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tile-row">
+                                            ᎒᎒᎒ <input type="checkbox" name="tiles" value="hazard-concrete-left" checked/> <span class="chkbox">Hazard Concrete L</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tile-row">
+                                            ᎒᎒᎒ <input type="checkbox" name="tiles" value="hazard-concrete-right" checked/> <span class="chkbox">Hazard Concrete R</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tile-row">
+                                            ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-concrete" checked/> <span class="chkbox">Refined Concrete</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tile-row">
+                                            ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-hazard-concrete-left" checked/> <span class="chkbox">Refined Hazard Concrete L</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tile-row">
+                                            ᎒᎒᎒ <input type="checkbox" name="tiles" value="refined-hazard-concrete-right" checked/> <span class="chkbox">Refined Hazard Concrete R</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="generate-row">
+                        <td colspan="3">
+                            <button type="submit" id="generate" name="generate">Generate Blueprint!</button>
+                        </td>
+                    </tr>
+                    <tr class="output-rows">
+                        <td colspan="3">
+                            <input type="text" id="bp-string" disabled>
+                            <button type="button" onclick="copyString()">Copy</button>
+                        </td>
+                    </tr>
+                    <tr class="footer">
+                        <td colspan="3">
+                            filthywabbit | 2023 | <a href="https://github.com/mlgarrett/pixtorio">github</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <script>
+            var form = document.getElementById("form")
+            var submit_button = document.getElementById("generate")
+            var bp_string_field = document.getElementById("bp-string")
 
-<script>
-
-	var form = document.getElementById("form")
-	var submit_button = document.getElementById("generate")
-	var bp_string_field = document.getElementById("bp-string")
-	form.addEventListener('submit', function(event) {
-		// prevent page from refreshing
-	    event.preventDefault()
-
-	    generate.disabled = true
-	    bp_string_field.value = "working..."
-
-		// grab the data inside the form fields
-	    const formData = new FormData(form)
-	    fetch('/',
-	    {
-	        method: 'POST',
-	        body: formData,
-	    }).then(response => response.text()).then((message) =>
-	    {
-	        // do something with the response
-	    	outspan = document.getElementById("bp-string")
-	    	outspan.value = message
-	    	generate.disabled = false
-	    })
-	})
-
-	function copyString()
-	{
-		var string_textbox = document.getElementById("bp-string")
-
-		navigator.clipboard.writeText(string_textbox.value)
-
-		// alert("Copied string to clipboard!");
-	}
-
-	var uploadField = document.getElementById("source");
-	uploadField.onchange = function()
-	{
-		// 2.5 megabytes limit
-		if(this.files[0].size > 2621440)
-		{
-			alert("File is too large!\nPlease use a file that is < 2.5Mb.");
-			this.value = "";
-		}
-	}
-
-	$( "#sortable" ).sortable({
-		placeholder: "placeholder",
-		forcePlaceholderSize: true,
-		helper: "helper",
-		forceHelperSize: true,
-		cursor: "move",
-		axis: "y",
-		revert: 250,
-	})
-	$( "#sortable" ).disableSelection()
-
-</script>
-
-</body>
+            form.addEventListener('submit', function(event) {
+            	// prevent page from refreshing
+                event.preventDefault()
+            
+                generate.disabled = true
+                bp_string_field.value = "working..."
+            
+            	// grab the data inside the form fields
+                const formData = new FormData(form)
+                fetch('/',
+                {
+                    method: 'POST',
+                    body: formData,
+                }).then(response => response.text()).then((message) =>
+                {
+                    // do something with the response
+                	outspan = document.getElementById("bp-string")
+                	outspan.value = message
+                	generate.disabled = false
+                })
+            })
+            
+            function copyString()
+            {
+            	var string_textbox = document.getElementById("bp-string")
+            
+            	navigator.clipboard.writeText(string_textbox.value)
+            }
+            
+            var uploadField = document.getElementById("source");
+            uploadField.onchange = function()
+            {
+            	// 2.5 megabytes limit
+            	if(this.files[0].size > 2621440)
+            	{
+            		alert("File is too large!\nPlease use a file that is < 2.5Mb.");
+            		this.value = "";
+            	}
+            }
+            
+            $( "#sortable" ).sortable({
+            	placeholder: "placeholder",
+            	forcePlaceholderSize: true,
+            	helper: "helper",
+            	forceHelperSize: true,
+            	cursor: "move",
+            	axis: "y",
+            	revert: 250,
+            })
+            $( "#sortable" ).disableSelection()
+        </script>
+    </body>
 </html>
