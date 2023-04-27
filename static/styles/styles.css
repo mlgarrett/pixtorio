@@ -194,3 +194,29 @@ button:hover
 {
   background-color: var(--hoverorange);
 }
+
+tr.footer
+{
+  text-align: center;
+  font-size: small;
+}
+
+ /* unvisited link */
+a:link {
+  color: var(--fontlight);
+}
+
+/* visited link */
+a:visited {
+  color: var(--fontlight);
+}
+
+/* mouse over link */
+a:hover {
+  color: var(--hoverorange);
+}
+
+/* selected link */
+a:active {
+  color: var(--hoverorange);
+} 
