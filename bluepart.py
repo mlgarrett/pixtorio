@@ -1,8 +1,10 @@
+import os
 import cv2
 import json
 import zlib
 import numpy
 import base64
+import secrets
 
 def scale_image(source, scale_percent):
 	# scale the image
@@ -43,18 +45,40 @@ def construct_blueprint(resized_image, palette):
 	pixel_ids = []
 	for row in labs:
 		pixel_ids.append([palette[lab] for lab in row])
-
 	pixel_ids = numpy.array(pixel_ids)
 
 	# pixel_ids now contains the item ids from the palette for each pixel
 
 	# Now convert back into uint8, and make downsampled image
 	center = numpy.uint8(center)
-	res = center[label.flatten()]
-	res2 = res.reshape((resized_image.shape))
+	flat_centers = center[label.flatten()]
+	res = flat_centers.reshape((resized_image.shape))
 
-	# for each pixel in the image, classify the color
-		# create an equal-dimension "image" with the classifications at each pixel
+	# read each relevant sprite file from the palette
+	sprites = numpy.array([scale_image(cv2.imread(os.path.join('sprites', t+'.png')), 0.05) for t in palette])
+
+	# construct the rows of the preview image by hstack-ing the sprites
+	preview_rows = []
+	for row in labs:
+		preview_rows.append(numpy.hstack([sprites[lab] for lab in row]))
+	preview_rows = numpy.array(preview_rows)
+
+	# produce final preview image by vstack-ing the rows
+	preview = numpy.vstack([row for row in preview_rows])
+
+	# save the preview image with a unique filename into the static previews
+	# folder
+
+	preview_path = os.path.join('static', 'preview', secrets.token_hex(4)+'.png')
+	cv2.imwrite(preview_path, preview)
+
+	with open(preview_path, 'rb') as preview_file:
+		encoded_preview = base64.encodebytes(preview_file.read())
+
+	encoded_preview = encoded_preview.decode('utf-8')
+
+	# delete the preview image
+	os.remove(preview_path)
 
 	# initialize the blueprint dictionary
 	bp = {"blueprint": {"tiles": [], "item": "blueprint"}}
@@ -66,9 +90,6 @@ def construct_blueprint(resized_image, palette):
 			# construct the dictionary entry
 			entry = {"position": {"x": j, "y": i}, "name": pixel}
 			bp["blueprint"]["tiles"].append(entry)
-			# print(f'{e_counter}:({i},{j}): {pixel}')
-
-	# console.print_json(json.dumps(bp))
 
 	# encode the json dict to a byte string
 	bp = str.encode(json.dumps(bp))
@@ -82,6 +103,11 @@ def construct_blueprint(resized_image, palette):
 	# push a zero version byte onto the front
 	bp = b'0' + bp
 
+	bp = bp.decode('utf-8')
+
 	# the blueprint string is formed!
 	# it is a byte string
-	return bp
+	response = {'bp_string': bp, 'preview': encoded_preview}
+	response = json.dumps(response)
+
+	return response

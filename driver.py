@@ -46,9 +46,8 @@ def generate_blueprint():
 		resized_image = bp.scale_image(og_image, scaling_factor)
 
 		# produce the blueprint string (as bytes)
-		bp_bytes = bp.construct_blueprint(resized_image, tiles)
+		message = bp.construct_blueprint(resized_image, tiles)
 
-		message = bp_bytes.decode('utf-8')
 		response = make_response(message, 200)
 		response.mimetype = "text/plain"
 

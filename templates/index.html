@@ -11,7 +11,7 @@
             <form id="form" action="{{ url_for('generate_blueprint') }}" method="post" enctype="multipart/form-data">
                 <table id="main">
                     <tr>
-                        <td colspan="3">
+                        <td colspan="2">
                             <h1>Pi<span id="chi">χ</span>tor<span id="chi">.</span>io</h1>
                             <h3>Image-to-pixel art blueprints for Factorio</h3>
                             <p class="welcome">Welcome!</p>
@@ -21,10 +21,7 @@
                     </tr>
                     <tr class="io-rows">
                         <td class="io-labs">
-                            Source Image
-                        </td>
-                        <td>
-                            <span class="tooltip"> ⓘ <span class="tooltip-text">Max 2.5MB!</span></span>
+                            Source Image&nbsp;<span class="tooltip">&nbsp;ⓘ&nbsp; <span class="tooltip-text">Max 2.5MB!</span></span>
                         </td>
                         <td>
                             <input type="file" id="source" name="source" required>
@@ -32,17 +29,15 @@
                     </tr>
                     <tr class="io-rows">
                         <td class="io-labs">
-                            Scale Factor
-                        </td>
-                        <td>
-                            <span class="tooltip"> ⓘ <span class="tooltip-text">Bigger = Higher Resolution = Larger Blueprint</span></span>
+                            Scale Factor&nbsp;<span class="tooltip">&nbsp;ⓘ&nbsp;<span class="tooltip-text">Bigger = Higher Resolution = Larger Blueprint</span></span>
                         </td>
                         <td>
                             <input type="number" size="5" id="scale" name="scale" min="0.01" max="1.00" step="0.01" value="0.15">
+                            <span class="dims">&nbsp;bp size →&nbsp;</span><span class="dims" id="width"></span><span class="dims" id="height">&nbsp;</span>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="tiles">
+                        <td class="tiles">
                             <table id="container">
                                 <tbody id="sortable">
                                     <tr>
@@ -88,20 +83,23 @@
                                 </tbody>
                             </table>
                         </td>
+                        <td class="preview" id="preview">
+                            Preview
+                        </td>
                     </tr>
                     <tr class="generate-row">
-                        <td colspan="3">
+                        <td colspan="2">
                             <button type="submit" id="generate" name="generate">Generate Blueprint!</button>
                         </td>
                     </tr>
                     <tr class="output-rows">
-                        <td colspan="3">
+                        <td colspan="2">
                             <input type="text" id="bp-string" disabled>
                             <button type="button" onclick="copyString()">Copy</button>
                         </td>
                     </tr>
                     <tr class="footer">
-                        <td colspan="3">
+                        <td colspan="2">
                             filthywabbit | 2023 
                         </td>
                     </tr>
