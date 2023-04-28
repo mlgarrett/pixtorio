@@ -28,7 +28,7 @@ def construct_blueprint(resized_image, palette):
 
 	# define criteria tuple and apply kmeans()
 	criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-	ret, label, center = cv2.kmeans(Z, K, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+	ret, label, center = cv2.kmeans(Z, K, None, criteria, 10, cv2.KMEANS_PP_CENTERS)
 
 	# this would sort the centers by their means
 	# center[numpy.mean(center, axis=1).argsort()]
