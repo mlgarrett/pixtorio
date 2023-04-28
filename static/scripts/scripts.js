@@ -15,6 +15,7 @@ form.addEventListener('submit', function(event) {
 
     generate.disabled = true
     bp_string_field.value = "working..."
+    preview_holder.innerHTML = "working..."
 
     // grab the data inside the form fields
     const formData = new FormData(form)
