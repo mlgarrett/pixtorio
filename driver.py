@@ -21,20 +21,19 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def generate_blueprint():
 	if request.method == 'POST':
+		# the image file from the ui
 		source_file = request.files['source']
-		# print(source_file)
 
 		if source_file and allowed_file(source_file.filename):
 			filename = secure_filename(source_file.filename)
 			filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 			source_file.save(filepath)
-			# print(filepath)
 
+		# the scaling factor from the ui
 		scaling_factor = float(request.form.get("scale"))
-		# print(scaling_factor)
 
+		# the selected tiles from the ui
 		tiles = request.form.getlist('tiles')
-		# print(tiles)
 
 		# read the image
 		og_image = cv2.imread(filepath)
@@ -45,9 +44,10 @@ def generate_blueprint():
 		# rescale the input image
 		resized_image = bp.scale_image(og_image, scaling_factor)
 
-		# produce the blueprint string (as bytes)
+		# produce the blueprint string (as bytes) and a preview image
 		message = bp.construct_blueprint(resized_image, tiles)
 
+		# form and send the response
 		response = make_response(message, 200)
 		response.mimetype = "text/plain"
 

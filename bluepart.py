@@ -8,7 +8,6 @@ import secrets
 
 def scale_image(source, scale_percent):
 	# scale the image
-	# scale_percent = 0.10 # percent of original size
 	width = int(source.shape[1] * scale_percent)
 	height = int(source.shape[0] * scale_percent)
 	dim = (width, height)
@@ -39,14 +38,12 @@ def construct_blueprint(resized_image, palette):
 
 	# reshape the labels from kmeans back to the shape of the resized_image image
 	labs = label.reshape((resized_image.shape[0], resized_image.shape[1]))
-
 	# labs now contains a color classification integer for each pixel
 
 	pixel_ids = []
 	for row in labs:
 		pixel_ids.append([palette[lab] for lab in row])
 	pixel_ids = numpy.array(pixel_ids)
-
 	# pixel_ids now contains the item ids from the palette for each pixel
 
 	# Now convert back into uint8, and make downsampled image
@@ -74,7 +71,6 @@ def construct_blueprint(resized_image, palette):
 
 	with open(preview_path, 'rb') as preview_file:
 		encoded_preview = base64.encodebytes(preview_file.read())
-
 	encoded_preview = encoded_preview.decode('utf-8')
 
 	# delete the preview image
@@ -107,6 +103,8 @@ def construct_blueprint(resized_image, palette):
 
 	# the blueprint string is formed!
 	# it is a byte string
+
+	# response json contains the bp string and the preview image encoded in b64
 	response = {'bp_string': bp, 'preview': encoded_preview}
 	response = json.dumps(response)
 
