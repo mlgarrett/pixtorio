@@ -227,3 +227,8 @@ a:hover {
 a:active {
   color: var(--hoverorange);
 } 
+
+#chi
+{
+  color: var(--fontyellow);
+}
