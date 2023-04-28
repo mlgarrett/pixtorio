@@ -25,6 +25,7 @@ form.addEventListener('submit', function(event) {
         body: formData,
     }).then(response => response.text()).then(message =>
     {
+        console.log(message)
         message = JSON.parse(message)
         bp_string = message.bp_string
         preview = message.preview
