@@ -37,21 +37,22 @@ table#main
   border-collapse: separate;
   border-spacing: 0 10px;
   width: 50em;
+  table-layout: fixed;
 }
 
 table#container
 {
   border: 1px solid black;
-  width: 100%;
   background-color: var(--lightgray);
   color: var(--fontdark);
   padding: 5px;
   height: 20em;
+  table-layout: fixed;
 }
 
 td.tiles
 {
-  padding: 0 5em;
+  padding: 0 1em;
 }
 
 tr.io-rows
@@ -78,7 +79,7 @@ td.tile-row
   background-color: var(--staticgreen);
   cursor: pointer;
 /*  padding: 5px;*/
-  width: 30em;
+  width: 50%;
 }
 
 td.tile-row:hover
@@ -166,13 +167,13 @@ input#bp-string
 
 .placeholder
 {
-  width: 50em;
+  width: 50%;
   background-color: lightyellow;
 }
 
 .helper
 {
-  width: 50em;
+  width: 50%;
 }
 
 input::file-selector-button
@@ -231,4 +232,16 @@ a:active {
 #chi
 {
   color: var(--fontyellow);
+}
+
+td.preview
+{
+  border: 1px dashed var(--fontyellow);
+  text-align: center;
+  vertical-align: middle;
+}
+
+span.dims
+{
+  font-size: small;
 }
