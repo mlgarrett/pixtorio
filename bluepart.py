@@ -5,6 +5,7 @@ import zlib
 import numpy
 import base64
 import secrets
+from sklearn import cluster
 
 def scale_image(source, scale_percent):
 	# scale the image
@@ -27,9 +28,15 @@ def construct_blueprint(resized_image, palette):
 	# define how many colors (clusters) to use
 	K = len(palette)
 
+	kmeans_cluster = cluster.MiniBatchKMeans(n_clusters=K, init='k-means++', random_state=0, batch_size=K, max_iter=1, n_init='auto')
+	kmeans_cluster.fit(Z)
+
+	center = kmeans_cluster.cluster_centers_
+	label = kmeans_cluster.labels_
+
 	# define criteria tuple and apply kmeans()
-	criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 5, 1.0)
-	ret, label, center = cv2.kmeans(Z, K, None, criteria, 5, cv2.KMEANS_PP_CENTERS)
+	# criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 5, 1.0)
+	# ret, label, center = cv2.kmeans(Z, K, None, criteria, 5, cv2.KMEANS_PP_CENTERS)
 
 	# this would sort the centers by their means
 	# center[numpy.mean(center, axis=1).argsort()]
