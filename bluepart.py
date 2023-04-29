@@ -65,7 +65,7 @@ def construct_blueprint(resized_image, palette):
 	prev_width = preview.shape[1]
 	prev_height = preview.shape[0]
 
-	new_preview_width = 800
+	new_preview_width = 400
 	ratio = new_preview_width / prev_width
 	new_preview_height = int(prev_height*ratio)
 
@@ -81,6 +81,7 @@ def construct_blueprint(resized_image, palette):
 	with open(preview_path, 'rb') as preview_file:
 		encoded_preview = base64.encodebytes(preview_file.read())
 	encoded_preview = encoded_preview.decode('utf-8')
+	print(len(encoded_preview))
 
 	# delete the preview image
 	os.remove(preview_path)
