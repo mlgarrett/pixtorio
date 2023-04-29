@@ -28,7 +28,7 @@ def construct_blueprint(resized_image, palette):
 	# define how many colors (clusters) to use
 	K = len(palette)
 
-	kmeans_cluster = cluster.MiniBatchKMeans(n_clusters=K, init='k-means++', random_state=0, batch_size=K, max_iter=1, n_init='auto')
+	kmeans_cluster = cluster.KMeans(n_clusters=K, init='k-means++', random_state=0, max_iter=1, n_init='auto')
 	kmeans_cluster.fit(Z)
 
 	center = kmeans_cluster.cluster_centers_
