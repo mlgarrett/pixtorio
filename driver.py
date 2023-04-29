@@ -55,8 +55,9 @@ def generate_blueprint():
 			return response
 		else:
 			message = {"bp_string": 0}
-			str.encode(json.dumps(message))
+			message = json.dumps(message)
 			response = make_response(message, 415)
+			response.mimetype = "text/plain"
 			return response
 
 @app.route('/favicon.ico')
