@@ -62,12 +62,21 @@ def construct_blueprint(resized_image, palette):
 
 	# produce final preview image by vstack-ing the rows
 	preview = numpy.vstack([row for row in preview_rows])
+	prev_width = preview.shape[1]
+	prev_height = preview.shape[0]
+
+	new_preview_width = 800
+	ratio = new_preview_width / prev_width
+	new_preview_height = int(prev_height*ratio)
+
+	dimensions = (new_preview_width, new_preview_height)
+	resized_preview = cv2.resize(preview, dimensions, interpolation=cv2.INTER_LINEAR)
 
 	# save the preview image with a unique filename into the static previews
 	# folder
 
 	preview_path = os.path.join('static', 'preview', secrets.token_hex(4)+'.png')
-	cv2.imwrite(preview_path, preview)
+	cv2.imwrite(preview_path, resized_preview)
 
 	with open(preview_path, 'rb') as preview_file:
 		encoded_preview = base64.encodebytes(preview_file.read())
