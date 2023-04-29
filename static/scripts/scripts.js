@@ -6,6 +6,7 @@ var preview_holder = document.getElementById("preview")
 var scale_field = document.getElementById("scale")
 var width_field = document.getElementById("width")
 var height_field = document.getElementById("height")
+var outspan = document.getElementById("bp-string")
 
 scale_field.addEventListener("change", update_scales)
 
@@ -27,14 +28,21 @@ form.addEventListener('submit', function(event) {
     {
         message = JSON.parse(message)
         bp_string = message.bp_string
-        preview = message.preview
+        if (bp_string)
+        {
+            preview = message.preview
 
-        // decode the preview back to an image and place it in the preview box
-        preview_holder.innerHTML = "<img src='data:image/png;base64,"+preview+"' style='max-width: 300px; max-height: 300px; height: auto;' alt='Rough Preview' />"
+            // decode the preview back to an image and place it in the preview box
+            preview_holder.innerHTML = "<img src='data:image/png;base64,"+preview+"' style='max-width: 300px; max-height: 300px; height: auto;' alt='Rough Preview' />"
 
-        // do something with the response
-        outspan = document.getElementById("bp-string")
-        outspan.value = bp_string
+            // do something with the response
+            outspan.value = bp_string
+        }
+        else
+        {
+            outspan.value = "error! invalid file type provided."
+            preview_holder.innerHTML = "error! invalid file type provided."
+        }
         generate.disabled = false
     })
 })

@@ -1,5 +1,6 @@
 import os
 import cv2
+import json
 import bluepart as bp
 from flask import Flask, render_template, request, redirect, make_response, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
@@ -29,29 +30,34 @@ def generate_blueprint():
 			filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 			source_file.save(filepath)
 
-		# the scaling factor from the ui
-		scaling_factor = float(request.form.get("scale"))
+			# the scaling factor from the ui
+			scaling_factor = float(request.form.get("scale"))
 
-		# the selected tiles from the ui
-		tiles = request.form.getlist('tiles')
+			# the selected tiles from the ui
+			tiles = request.form.getlist('tiles')
 
-		# read the image
-		og_image = cv2.imread(filepath)
+			# read the image
+			og_image = cv2.imread(filepath)
 
-		# delete the uploaded file for cleanliness
-		os.remove(filepath)
+			# delete the uploaded file for cleanliness
+			os.remove(filepath)
 
-		# rescale the input image
-		resized_image = bp.scale_image(og_image, scaling_factor)
+			# rescale the input image
+			resized_image = bp.scale_image(og_image, scaling_factor)
 
-		# produce the blueprint string (as bytes) and a preview image
-		message = bp.construct_blueprint(resized_image, tiles)
+			# produce the blueprint string (as bytes) and a preview image
+			message = bp.construct_blueprint(resized_image, tiles)
 
-		# form and send the response
-		response = make_response(message, 200)
-		response.mimetype = "text/plain"
+			# form and send the response
+			response = make_response(message, 200)
+			response.mimetype = "text/plain"
 
-	return response
+			return response
+		else:
+			message = {"bp_string": 0}
+			str.encode(json.dumps(message))
+			response = make_response(message, 415)
+			return response
 
 @app.route('/favicon.ico')
 def favicon():
