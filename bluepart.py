@@ -81,7 +81,6 @@ def construct_blueprint(resized_image, palette):
 	with open(preview_path, 'rb') as preview_file:
 		encoded_preview = base64.encodebytes(preview_file.read())
 	encoded_preview = encoded_preview.decode('utf-8')
-	print(len(encoded_preview))
 
 	# delete the preview image
 	os.remove(preview_path)
