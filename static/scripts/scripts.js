@@ -8,8 +8,6 @@ var width_field = document.getElementById("width")
 var height_field = document.getElementById("height")
 var outspan = document.getElementById("bp-string")
 
-scale_field.addEventListener("change", update_scales)
-
 form.addEventListener('submit', function(event) {
     // prevent page from refreshing
     event.preventDefault()
@@ -47,7 +45,13 @@ form.addEventListener('submit', function(event) {
     })
 })
 
-function update_scales()
+function update_scales(dimensions)
+{
+        width_field.innerHTML = "&nbsp;w: " + Math.round(scale_field.value*dimensions[0]) + "&nbsp;"
+        height_field.innerHTML = "&nbsp;h: " + Math.round(scale_field.value*dimensions[1])
+}
+
+function get_upload_dimensions(dimension_callback)
 {
     if (uploadField.files && uploadField.files[0])
     {
@@ -60,13 +64,9 @@ function update_scales()
 
             image.onload = function()
             {
-                // get image dims
-                image_width = this.width
-                image_height = this.height
-                width_field.innerHTML = "&nbsp;w: " + Math.round(scale_field.value*image_width) + "&nbsp;"
-                height_field.innerHTML = "&nbsp;h: " + Math.round(scale_field.value*image_height)
-            };
-        };
+                dimension_callback([this.width, this.height])
+            }
+        }
     }
 }
 
@@ -82,12 +82,35 @@ uploadField.onchange = function()
     // 2.5 megabytes limit
     if(this.files[0].size > 2621440)
     {
-        alert("File is too large!\nPlease use a file that is < 2.5Mb.");
+        alert("File is too large! Please use a file that is < 2.5MB.");
         this.value = "";
         return
     }
+    else
+    {
+        get_upload_dimensions(function(dimensions)
+        {
+            // get the image dimensions and return if max pixels is exceeded
+            if (dimensions[0]*dimensions[1] > 2**20)
+            {
+                alert("Resolution is too high! Please limit to 1MP (1024x1024).")
+                uploadField.value = "";
+                return
+            }
+            else
+            {
+                update_scales(dimensions)
+            }
+        })
+    }
+}
 
-    update_scales()
+scale_field.onchange = function()
+{
+    get_upload_dimensions(function(dimensions)
+    {
+        update_scales(dimensions)
+    })
 }
 
 $( "#sortable" ).sortable({
