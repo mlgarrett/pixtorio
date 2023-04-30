@@ -7,12 +7,14 @@ var scale_field = document.getElementById("scale")
 var width_field = document.getElementById("width")
 var height_field = document.getElementById("height")
 var outspan = document.getElementById("bp-string")
+var copy_btn = document.getElementById("copy-btn")
 
 form.addEventListener('submit', function(event) {
     // prevent page from refreshing
     event.preventDefault()
 
     generate.disabled = true
+    copy_btn.disabled = true
     bp_string_field.value = "working..."
     preview_holder.innerHTML = "<div class='preview-loader' id='preview-loader'></div>"
 
@@ -42,6 +44,7 @@ form.addEventListener('submit', function(event) {
             preview_holder.innerHTML = "error! invalid file type provided."
         }
         generate.disabled = false
+        copy_btn.disabled = false
     })
 })
 
@@ -89,7 +92,6 @@ function get_upload_dimensions(dimension_callback)
 function copyString()
 {
     var string_textbox = document.getElementById("bp-string")
-
     navigator.clipboard.writeText(string_textbox.value)
 }
 
