@@ -1,7 +1,7 @@
 var form = document.getElementById("form")
 var submit_button = document.getElementById("generate")
 var bp_string_field = document.getElementById("bp-string")
-var uploadField = document.getElementById("source");
+var uploadField = document.getElementById("source")
 var preview_holder = document.getElementById("preview-holder")
 var scale_field = document.getElementById("scale")
 var width_field = document.getElementById("width")
@@ -12,6 +12,13 @@ var copy_btn = document.getElementById("copy-btn")
 form.addEventListener('submit', function(event) {
     // prevent page from refreshing
     event.preventDefault()
+
+    // ensure at least one tile is selected
+    if (!validate_checkboxes())
+    {
+        alert("Please select at least one tile type!")
+        return
+    }
 
     generate.disabled = true
     copy_btn.disabled = true
@@ -63,7 +70,7 @@ function get_upload_dimensions(dimension_callback)
         reader.onload = function(e)
         {
             var image = new Image()
-            image.src = e.target.result;
+            image.src = e.target.result
 
             image.onload = function()
             {
@@ -119,7 +126,30 @@ scale_field.onchange = function()
     })
 }
 
-$( "#sortable" ).sortable({
+function validate_checkboxes()
+{
+    var checkBoxes = document.getElementsByClassName('checkbox')
+    var isChecked = false
+    for (var i = 0; i < checkBoxes.length; i++)
+    {
+        if (checkBoxes[i].checked)
+        {
+            isChecked = true
+            break
+        }
+    }
+    if (isChecked)
+    {
+        return true
+    }
+    else
+    {
+        return false
+    }
+}
+
+$( "#sortable" ).sortable(
+{
     placeholder: "placeholder",
     forcePlaceholderSize: true,
     helper: "helper",
@@ -128,4 +158,5 @@ $( "#sortable" ).sortable({
     axis: "y",
     revert: 250,
 })
+
 $( "#sortable" ).disableSelection()
