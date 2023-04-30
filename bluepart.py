@@ -8,10 +8,18 @@ import secrets
 from sklearn import cluster
 
 def scale_image(source, scale_percent):
+	# if the image has too many pixels, scale it down to a max of 256 in one
+	# direction
+	if (source.shape[1]*source.shape[0] > 256**2):
+		scale = min(1, min(256/source.shape[1], 256/source.shape[0]))
+		bp_width = int(source.shape[1]*scale)
+		bp_height = int(source.shape[0]*scale)
+	else:
+		bp_width = int(source.shape[1] * scale_percent)
+		bp_height = int(source.shape[0] * scale_percent)
+
 	# scale the image
-	width = int(source.shape[1] * scale_percent)
-	height = int(source.shape[0] * scale_percent)
-	dim = (width, height)
+	dim = (bp_width, bp_height)
 	  
 	# resize image
 	resized = cv2.resize(source, dim, interpolation = cv2.INTER_AREA)

@@ -64,7 +64,23 @@ function get_upload_dimensions(dimension_callback)
 
             image.onload = function()
             {
-                dimension_callback([this.width, this.height])
+                // get the image dimensions and return if max pixels is exceeded
+                if (this.width*this.height > 256**2)
+                {
+                    // alert("Resolution is too high! Please limit to 1MP (1024x1024).")
+                    // do something about the dimensions here?
+                    // compute a scaling factor with a max in one dimension
+                    scale = Math.min(1, Math.min(256/this.width, 256/this.height))
+                    // compute the new blueprint width and height
+                    bp_width = Math.round(this.width*scale)
+                    bp_height = Math.round(this.height*scale)
+
+                    dimension_callback([bp_width, bp_height])
+                }
+                else
+                {
+                    dimension_callback([this.width, this.height])
+                }
             }
         }
     }
@@ -90,17 +106,7 @@ uploadField.onchange = function()
     {
         get_upload_dimensions(function(dimensions)
         {
-            // get the image dimensions and return if max pixels is exceeded
-            if (dimensions[0]*dimensions[1] > 2**20)
-            {
-                alert("Resolution is too high! Please limit to 1MP (1024x1024).")
-                uploadField.value = "";
-                return
-            }
-            else
-            {
-                update_scales(dimensions)
-            }
+            update_scales(dimensions)
         })
     }
 }
