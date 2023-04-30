@@ -191,7 +191,7 @@ button
   background-color: var(--lightgray);
 }
 
-button:hover
+button:hover:enabled
 {
   background-color: var(--hoverorange);
 }
