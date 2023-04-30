@@ -70,8 +70,6 @@ function get_upload_dimensions(dimension_callback)
                 // get the image dimensions and return if max pixels is exceeded
                 if (this.width*this.height > 256**2)
                 {
-                    // alert("Resolution is too high! Please limit to 1MP (1024x1024).")
-                    // do something about the dimensions here?
                     // compute a scaling factor with a max in one dimension
                     scale = Math.min(1, Math.min(256/this.width, 256/this.height))
                     // compute the new blueprint width and height
@@ -98,9 +96,9 @@ function copyString()
 uploadField.onchange = function()
 {
     // 2.5 megabytes limit
-    if(this.files[0].size > 2621440)
+    if(this.files[0].size > 5242880)
     {
-        alert("File is too large! Please use a file that is < 2.5MB.");
+        alert("File is too large! Please use a file that is <5MB.");
         this.value = "";
         return
     }
