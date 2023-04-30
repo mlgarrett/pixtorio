@@ -20,7 +20,6 @@ def scale_image(source, scale_percent):
 
 	# scale the image
 	dim = (bp_width, bp_height)
-	print(dim)
 	  
 	# resize image
 	resized = cv2.resize(source, dim, interpolation = cv2.INTER_AREA)

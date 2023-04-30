@@ -2,7 +2,7 @@ var form = document.getElementById("form")
 var submit_button = document.getElementById("generate")
 var bp_string_field = document.getElementById("bp-string")
 var uploadField = document.getElementById("source");
-var preview_holder = document.getElementById("preview")
+var preview_holder = document.getElementById("preview-holder")
 var scale_field = document.getElementById("scale")
 var width_field = document.getElementById("width")
 var height_field = document.getElementById("height")
@@ -14,7 +14,7 @@ form.addEventListener('submit', function(event) {
 
     generate.disabled = true
     bp_string_field.value = "working..."
-    preview_holder.innerHTML = "working..."
+    preview_holder.innerHTML = "<div class='preview-loader' id='preview-loader'></div>"
 
     // grab the data inside the form fields
     const formData = new FormData(form)

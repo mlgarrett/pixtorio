@@ -234,7 +234,7 @@ a:active {
   color: var(--fontyellow);
 }
 
-td.preview
+td.preview-holder
 {
   border: 1px dashed var(--fontyellow);
   text-align: center;
@@ -244,4 +244,27 @@ td.preview
 span.dims
 {
   font-size: small;
+}
+
+.preview-loader
+{
+  border: 4px solid var(--lightgray);
+  border-top: 4px solid var(--hoverorange);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin
+{
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+div.preview-label
+{
+  margin: auto;
+  display: block;
 }
