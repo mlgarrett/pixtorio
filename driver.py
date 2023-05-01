@@ -19,6 +19,14 @@ def welcome():
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def return_error():
+	message = {"bp_string": 0}
+	message = json.dumps(message)
+	response = make_response(message, 415)
+	response.mimetype = "text/plain"
+
+	return response
+
 @app.route('/', methods=['GET', 'POST'])
 def generate_blueprint():
 	if request.method == 'POST':
@@ -39,6 +47,10 @@ def generate_blueprint():
 			# read the image
 			og_image = cv2.imread(filepath)
 
+			# if we failed to read the image
+			if og_image is None:
+				return return_error()
+
 			# delete the uploaded file for cleanliness
 			os.remove(filepath)
 
@@ -54,11 +66,7 @@ def generate_blueprint():
 
 			return response
 		else:
-			message = {"bp_string": 0}
-			message = json.dumps(message)
-			response = make_response(message, 415)
-			response.mimetype = "text/plain"
-			return response
+			return return_error()
 
 @app.route('/favicon.ico')
 def favicon():
