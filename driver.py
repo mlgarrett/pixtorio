@@ -49,10 +49,8 @@ def generate_blueprint():
 
 			# if we failed to read the image
 			if og_image is None:
+				os.remove(filepath)
 				return return_error()
-
-			# delete the uploaded file for cleanliness
-			os.remove(filepath)
 
 			# rescale the input image
 			resized_image = bp.scale_image(og_image, scaling_factor)
@@ -64,6 +62,8 @@ def generate_blueprint():
 			response = make_response(message, 200)
 			response.mimetype = "text/plain"
 
+			# delete the uploaded file for cleanliness
+			os.remove(filepath)
 			return response
 		else:
 			return return_error()
