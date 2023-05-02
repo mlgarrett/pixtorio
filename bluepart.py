@@ -18,10 +18,8 @@ def scale_image(source, scale_percent):
 		bp_width = int(source.shape[1] * scale_percent)
 		bp_height = int(source.shape[0] * scale_percent)
 
-	# scale the image
-	dim = (bp_width, bp_height)
-	  
 	# resize image
+	dim = (bp_width, bp_height)
 	resized = cv2.resize(source, dim, interpolation = cv2.INTER_AREA)
 
 	return resized
@@ -40,16 +38,9 @@ def construct_blueprint(resized_image, palette):
 	kmeans_cluster.fit(Z)
 
 	center = kmeans_cluster.cluster_centers_
-	label = kmeans_cluster.labels_
-
-	# define criteria tuple and apply kmeans()
-	# criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 5, 1.0)
-	# ret, label, center = cv2.kmeans(Z, K, None, criteria, 5, cv2.KMEANS_PP_CENTERS)
-
-	# this would sort the centers by their means
-	# center[numpy.mean(center, axis=1).argsort()]
-
 	# center now contains K RGB color values as a nested list
+
+	label = kmeans_cluster.labels_
 
 	# reshape the labels from kmeans back to the shape of the resized_image image
 	labs = label.reshape((resized_image.shape[0], resized_image.shape[1]))
@@ -61,7 +52,7 @@ def construct_blueprint(resized_image, palette):
 	pixel_ids = numpy.array(pixel_ids)
 	# pixel_ids now contains the item ids from the palette for each pixel
 
-	# Now convert back into uint8, and make downsampled image
+	# now convert back into uint8, and make downsampled image
 	center = numpy.uint8(center)
 	flat_centers = center[label.flatten()]
 	res = flat_centers.reshape((resized_image.shape))
@@ -89,15 +80,18 @@ def construct_blueprint(resized_image, palette):
 
 	# save the preview image with a unique filename into the static previews
 	# folder
-
 	preview_path = os.path.join('static', 'preview', secrets.token_hex(4)+'.png')
 	cv2.imwrite(preview_path, resized_preview)
 
+	# read the saved preview image bytes and encode them to base64
 	with open(preview_path, 'rb') as preview_file:
 		encoded_preview = base64.encodebytes(preview_file.read())
 	encoded_preview = encoded_preview.decode('utf-8')
 
-	# delete the preview image
+	# the preview is formed! it is a png mosaic of tile sprites, encoded in
+	# base64, and interpreted as unicode text
+
+	# delete the preview image file
 	os.remove(preview_path)
 
 	# initialize the blueprint dictionary
@@ -123,10 +117,11 @@ def construct_blueprint(resized_image, palette):
 	# push a zero version byte onto the front
 	bp = b'0' + bp
 
-	bp = bp.decode('utf-8')
-
 	# the blueprint string is formed!
 	# it is a byte string
+
+	# interpret the blueprint bytes into unicode
+	bp = bp.decode('utf-8')
 
 	# response json contains the bp string and the preview image encoded in b64
 	response = {'bp_string': bp, 'preview': encoded_preview}
