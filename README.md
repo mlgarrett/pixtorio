@@ -1,6 +1,8 @@
 # Piχtorio
 A pixel art blueprint generator for Factorio!
 
+Try the live site at [pixtor.io](https://pixtor.io)!
+
 Community contributions to this tool are welcomed and encouraged! The code isn't that complicated, and there is lots of room for improvement.
 
 ## Development Setup
