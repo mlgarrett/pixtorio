@@ -1,5 +1,7 @@
 # ignore testing images
 *.jpg
+*.jpeg
+*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
