@@ -52,7 +52,7 @@ def generate_blueprint():
             tiles = request.form.getlist('tiles')
 
             # read the image
-            og_image = cv2.imread(filepath)
+            og_image = cv2.imread(filepath, cv2.IMREAD_UNCHANGED)
 
             # if we failed to read the image
             if og_image is None:

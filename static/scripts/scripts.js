@@ -8,6 +8,7 @@ var width_field = document.getElementById("width")
 var height_field = document.getElementById("height")
 var outspan = document.getElementById("bp-string")
 var copy_btn = document.getElementById("copy-btn")
+var contributorsLine = document.getElementById("contributors-line")
 
 form.addEventListener('submit', function(event) {
     // prevent page from refreshing
@@ -160,3 +161,19 @@ $( "#sortable" ).sortable(
 })
 
 $( "#sortable" ).disableSelection()
+
+var CONTRIBUTORS_URL = "https://api.github.com/repos/mlgarrett/pixtorio/contributors?per_page=100"
+var MAX_CONTRIBUTORS = 5
+
+fetch(CONTRIBUTORS_URL)
+.then(r => r.json())
+.then(contributors => {
+    var logins = contributors.map(c => c.login)
+
+    if (logins.length > MAX_CONTRIBUTORS) {
+        logins = logins.slice(0, MAX_CONTRIBUTORS)
+    }
+
+    contributorsLine.textContent = logins.join(" + ")
+})
+

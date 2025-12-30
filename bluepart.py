@@ -25,14 +25,26 @@ def scale_image(source, scale_percent):
 	return resized
 
 def construct_blueprint(resized_image, palette):
-	# reshape image
-	Z = resized_image.reshape((-1,3))
+	# explicitly handle black+white images
+	if resized_image.ndim == 2:
+		resized_image = cv2.cvtColor(resized_image, cv2.COLOR_GRAY2RGB)
+
+	# split RGB and alpha; only alpha>0 participates / is emitted
+	rgb = resized_image[:, :, :3]
+	alpha = (resized_image[:, :, 3] > 0) if resized_image.shape[2] == 4 else numpy.ones(rgb.shape[:2], dtype=bool)
+	alpha_flat = alpha.reshape((-1,))
+
+	# reshape image (foreground only)
+	Z = rgb.reshape((-1,3))[alpha_flat]
 
 	# convert to numpy.float32
 	Z = numpy.float32(Z)
 
-	# define how many colors (clusters) to use
-	K = len(palette)
+	# number of distinct colors in the image
+	unique_colors = numpy.unique(Z, axis=0).shape[0]
+
+	# clamp K (colors, clusters) to what the data can support
+	K = min(len(palette), unique_colors)
 
 	kmeans_cluster = cluster.KMeans(n_clusters=K, init='k-means++', random_state=0, max_iter=1, n_init='auto')
 	kmeans_cluster.fit(Z)
@@ -40,10 +52,12 @@ def construct_blueprint(resized_image, palette):
 	center = kmeans_cluster.cluster_centers_
 	# center now contains K RGB color values as a nested list
 
-	label = kmeans_cluster.labels_
+	label_fg = kmeans_cluster.labels_
+	label = numpy.zeros(alpha_flat.shape, dtype=label_fg.dtype)
+	label[alpha_flat] = label_fg
 
 	# reshape the labels from kmeans back to the shape of the resized_image image
-	labs = label.reshape((resized_image.shape[0], resized_image.shape[1]))
+	labs = label.reshape((rgb.shape[0], rgb.shape[1]))
 	# labs now contains a color classification integer for each pixel
 
 	pixel_ids = []
@@ -55,15 +69,18 @@ def construct_blueprint(resized_image, palette):
 	# now convert back into uint8, and make downsampled image
 	center = numpy.uint8(center)
 	flat_centers = center[label.flatten()]
-	res = flat_centers.reshape((resized_image.shape))
+	res = flat_centers.reshape((rgb.shape))
 
 	# read each relevant sprite file from the palette
 	sprites = numpy.array([scale_image(cv2.imread(os.path.join('sprites', t+'.png')), 0.05) for t in palette])
 
+	# preview-only sprite for transparent (alpha==0) pixels
+	transparent_sprite = scale_image(cv2.imread(os.path.join('sprites', 'transparent.png')), 0.05)
+
 	# construct the rows of the preview image by hstack-ing the sprites
 	preview_rows = []
-	for row in labs:
-		preview_rows.append(numpy.hstack([sprites[lab] for lab in row]))
+	for i, row in enumerate(labs):
+		preview_rows.append(numpy.hstack([sprites[lab] if alpha[i, j] else transparent_sprite for j, lab in enumerate(row)]))
 	preview_rows = numpy.array(preview_rows)
 
 	# produce final preview image by vstack-ing the rows
@@ -101,9 +118,10 @@ def construct_blueprint(resized_image, palette):
 	# dictionary using the classification item ids with the associated position
 	for i, row in enumerate(pixel_ids):
 		for j, pixel in enumerate(row):
-			# construct the dictionary entry
-			entry = {"position": {"x": j, "y": i}, "name": pixel}
-			bp["blueprint"]["tiles"].append(entry)
+			if alpha[i, j]:
+				# construct the dictionary entry
+				entry = {"position": {"x": j, "y": i}, "name": pixel}
+				bp["blueprint"]["tiles"].append(entry)
 
 	# encode the json dict to a byte string
 	bp = str.encode(json.dumps(bp))
